@@ -14,6 +14,9 @@ class ArticleListView(ListView):
     context_object_name = 'articles'
     #пагинация на основе классов, котрый мы используем для главной странице и добавим ему парамтер
     paginate_by = 2
+    
+    #создание кастомного менеджера
+    queryset = Article.custom.all()
     #добавление заголовка странице через добавления context в представление
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

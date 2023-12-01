@@ -19,6 +19,17 @@ class Article(models.Model):
     Модель постов для сайта
     """
 
+    class ArticleManager(models.Manager):
+        """
+        Кастомный менеджер для модели статей
+        """
+
+        def all(self):
+            """
+            Список статей (SQL запрос с фильтрацией для страницы списка статей)
+            """
+            return self.get_queryset().select_related('author', 'category').filter(status='published')
+
     STATUS_OPTIONS = (
         ('published', 'Опубликовано'), 
         ('draft', 'Черновик')
@@ -53,6 +64,8 @@ class Article(models.Model):
     #булево значение, по умолчанию False (не закреплено)
     fixed = models.BooleanField(verbose_name='Зафиксировано', default=False)
 
+    
+
     class Meta:
         db_table = 'app_articles'
         ordering = ['-fixed', '-time_create']
@@ -60,6 +73,8 @@ class Article(models.Model):
         verbose_name = 'Статья'
         verbose_name_plural = 'Статьи'
 
+    custom = ArticleManager()
+    
     def __str__(self):
         return self.title
     
